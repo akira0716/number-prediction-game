@@ -1,14 +1,22 @@
-import React from "react";
+import React, { useState } from "react";
+import eventList from "../utils/eventList";
+import { sendEvent } from "../utils/eventsComm";
 
-const ModalBase = ({ windowType }) => {
+export const modal_data = {
+  modalType: "",
+  params: { room_id: "" },
+};
+
+const ModalBase = ({ modalData }) => {
+  const [form, setForm] = useState("");
   let contents = null;
 
-  switch (windowType) {
-    case "Home":
+  switch (modalData.modalType) {
+    case "Invite":
       contents = (
         <>
           <h3 className="text-4xl py-7 px-3">
-            ルームID: <span>12345</span>
+            ルームID: <span>{modalData.params.room_id}</span>
           </h3>
           <p className="text-3xl text-center">参加者を待っています</p>
           <p className="text-center my-4">
@@ -23,6 +31,37 @@ const ModalBase = ({ windowType }) => {
       );
       break;
 
+    case "Join":
+      contents = (
+        <>
+          <h3 className="text-4xl py-7 px-3">
+            ルームID: <span>{modalData.params.room_id}</span>
+          </h3>
+          <p className="text-center my-4">
+            <input
+              type="text"
+              className="input input-bordered w-full max-w-xs text-center text-4xl h-20"
+              onChange={(e) => setForm(e.target.value)}
+              value={form}
+            />
+          </p>
+          <div className="modal-action">
+            <button
+              className="btn btn-active btn-secondary"
+              onClick={() => {
+                eventList.JOIN.Params.room_id = form;
+                sendEvent(eventList.JOIN.EventName, eventList.JOIN.Params);
+              }}
+            >
+              参加する
+            </button>
+            <form method="dialog">
+              <button className="btn">キャンセル</button>
+            </form>
+          </div>
+        </>
+      );
+      break;
     default:
       contents = (
         <>

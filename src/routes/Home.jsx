@@ -1,20 +1,30 @@
-import React from "react";
-import ModalBase from "../components/ModalBase";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import ModalBase, { modal_data } from "../components/ModalBase";
+import { sendEvent } from "../utils/eventsComm";
+import eventList from "../utils/eventList";
 
-const Home = () => {
-  const navigate = useNavigate();
+const Home = ({ roomId }) => {
+  const [render, setRender] = useState(true);
 
   // ボタン[募集する]押下時
   const onClickBtnInvite = () => {
-    // Todo : サーバーにイベント送信しルームIDを要求する。
-    // Todo : サーバーからルームID受信後に表示。
+    modal_data.modalType = "Invite";
+    sendEvent(eventList.INVITE.EventName);
+  };
+
+  // ボタン[参加する]押下時
+  const onClickBtnJoin = () => {
+    modal_data.modalType = "Join";
+    setRender(!render);
     document.getElementById("my_modal_1").showModal();
   };
 
-  const onClickBtnJoin = () => {
-    navigate("/game");
-  };
+  useEffect(() => {
+    if (roomId !== "") {
+      modal_data.params = { ...modal_data.params, ["room_id"]: roomId };
+      setRender(!render);
+    }
+  }, [roomId]);
 
   return (
     <>
@@ -37,7 +47,7 @@ const Home = () => {
           </button>
         </div>
       </div>
-      <ModalBase windowType={"Home"} />
+      <ModalBase modalData={modal_data} />
     </>
   );
 };

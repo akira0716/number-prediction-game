@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { sendEvent } from "../utils/eventsComm";
+import eventList from "../utils/eventList";
 
 const initValue = {
   value1: "",
@@ -6,19 +8,31 @@ const initValue = {
   value3: "",
 };
 
-const PlayDisp01 = () => {
+const PlayDisp01 = ({ roomId }) => {
   const [gameState, setGameState] = useState(0);
   const [inputValue, setInputValue] = useState(initValue);
 
+  // ボタン[決定する]押下時
   const onClickBtnDecide = () => {
-    setGameState(1);
+    eventList.SET_NUM.Params.room_id = roomId;
+    eventList.SET_NUM.Params.number = Object.values(inputValue).join("");
+    sendEvent(eventList.SET_NUM.EventName, eventList.SET_NUM.Params);
+
+    setGameState((value) => value + 1);
     setInputValue(initValue);
   };
 
+  // ボタン[予想する]押下時
   const onClickBtnPrediction = () => {
+    eventList.PREDICT.Params.room_id = roomId;
+    eventList.PREDICT.Params.number = Object.values(inputValue).join("");
+    sendEvent(eventList.PREDICT.EventName, "");
+
     setGameState((value) => value + 1);
+    setInputValue(initValue);
   };
 
+  // 数字入力時
   const onChangeInputValue = (e) => {
     const { name, value } = e.target;
     const newValue = value.slice(0, 1);
