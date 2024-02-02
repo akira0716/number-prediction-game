@@ -1,4 +1,7 @@
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+const dotenv = require("dotenv");
+const webpack = require("webpack");
+const env = dotenv.config().parsed;
 
 module.exports = {
   mode: "development",
@@ -37,6 +40,15 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: __dirname + "/src/index.html",
     }),
+    env !== undefined
+      ? new webpack.DefinePlugin({
+          "process.env": JSON.stringify(process.env),
+        })
+      : new webpack.DefinePlugin({
+          "process.env.REACT_APP_SUPABASE_URL": JSON.stringify(
+            process.env.REACT_APP_SUPABASE_URL
+          ),
+        }),
   ],
   devServer: {
     static: {
