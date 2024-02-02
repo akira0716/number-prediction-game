@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import eventList from "../utils/eventList";
 import { sendEvent } from "../utils/eventsComm";
+import { useNavigate } from "react-router-dom";
 
 export const modal_data = {
   modalType: "",
@@ -9,6 +10,7 @@ export const modal_data = {
 
 const ModalBase = ({ modalData }) => {
   const [form, setForm] = useState("");
+  const navigate = useNavigate(null);
   let contents = null;
 
   switch (modalData.modalType) {
@@ -24,7 +26,12 @@ const ModalBase = ({ modalData }) => {
           </p>
           <div className="modal-action">
             <form method="dialog">
-              <button className="btn">キャンセル</button>
+              <button
+                className="btn"
+                onClick={() => sendEvent(eventList.CANCEL.EventName)}
+              >
+                キャンセル
+              </button>
             </form>
           </div>
         </>
@@ -35,7 +42,7 @@ const ModalBase = ({ modalData }) => {
       contents = (
         <>
           <h3 className="text-4xl py-7 px-3">
-            ルームID: <span>{modalData.params.room_id}</span>
+            参加するルームのIDを入力してください。
           </h3>
           <p className="text-center my-4">
             <input
@@ -62,6 +69,50 @@ const ModalBase = ({ modalData }) => {
         </>
       );
       break;
+
+    case "Decide":
+      contents = (
+        <>
+          <h3 className="text-4xl py-7 px-3">
+            相手が、数字を設定中です。少々お待ちください。
+          </h3>
+        </>
+      );
+      break;
+
+    case "Predict":
+      contents = (
+        <>
+          <h3 className="text-4xl py-7 px-3">
+            相手が、数字を予想しています。少々お待ちください。
+          </h3>
+        </>
+      );
+      break;
+
+    case "Result":
+      contents = (
+        <>
+          <h3 className="font-bold text-lg">ゲーム終了!!!</h3>
+          <p className="py-4">{modalData.params.result}</p>
+          <div className="modal-action">
+            <button
+              className="btn btn-active btn-secondary"
+              onClick={() => {
+                navigate("/");
+                modalData.params.setGameState();
+              }}
+            >
+              タイトル画面に戻る
+            </button>
+            <form method="dialog">
+              <button className="btn">閉じる</button>
+            </form>
+          </div>
+        </>
+      );
+      break;
+
     default:
       contents = (
         <>

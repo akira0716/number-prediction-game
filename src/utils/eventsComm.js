@@ -1,6 +1,5 @@
 import { socket } from "./socket";
 import eventList from "./eventList";
-import { useNavigate } from "react-router-dom";
 
 // イベント送信処理
 export const sendEvent = (eventName, data) => {
@@ -12,11 +11,12 @@ export const sendEvent = (eventName, data) => {
 export const recieveEvents = (setEventParams) => {
   socket.on(eventList.READY.EventName, (msg) => {
     const eventParams = {
-      EventName: eventList.START.EventName,
+      EventName: eventList.READY.EventName,
       Params: msg,
     };
     setEventParams(eventParams);
     console.log(`イベント[${eventList.READY.EventName}]を受信しました。`);
+    document.getElementById("my_modal_1").close();
   });
 
   socket.on(eventList.START.EventName, (msg) => {
@@ -35,6 +35,7 @@ export const recieveEvents = (setEventParams) => {
     };
     setEventParams(eventParams);
     console.log(`イベント[${eventList.END.EventName}]を受信しました。`);
+    document.getElementById("my_modal_1").close();
   });
 
   socket.on(eventList.ROOM_ID.EventName, (msg) => {
@@ -54,6 +55,7 @@ export const recieveEvents = (setEventParams) => {
     };
     setEventParams(eventParams);
     console.log(`イベント[${eventList.RESULT.EventName}]を受信しました。`);
+    document.getElementById("my_modal_1").close();
   });
 
   socket.on(eventList.ERROR.EventName, (msg) => {
@@ -63,5 +65,15 @@ export const recieveEvents = (setEventParams) => {
     };
     setEventParams(eventParams);
     console.log(`イベント[${eventList.ERROR.EventName}]を受信しました。`);
+    document.getElementById("my_modal_1").close();
+  });
+
+  socket.on(eventList.FORCE_END.EventName, (msg) => {
+    const eventParams = {
+      EventName: eventList.FORCE_END.EventName,
+      Params: msg,
+    };
+    setEventParams(eventParams);
+    console.log(`イベント[${eventList.FORCE_END.EventName}]を受信しました。`);
   });
 };

@@ -18,17 +18,26 @@ const eventList = {
   },
   RESULT: {
     EventName: "RESULT",
-    Params: {},
+    Params: {
+      predict_num: "",
+      EAT: 0,
+      BITE: 0,
+      status: "",
+    },
   },
   END: {
     EventName: "END",
-    Params: {},
+    Params: { predict_num: "", EAT: 0, BITE: 0, status: "" },
   },
   ERROR: {
     EventName: "ERROR",
     Params: {
       err_msg: "",
     },
+  },
+  FORCE_END: {
+    EventName: "FORCE_END",
+    Params: {},
   },
   //#endregion
 
@@ -56,6 +65,10 @@ const eventList = {
     Params: {
       room_id: "",
     },
+  },
+  CANCEL: {
+    EventName: "CANCEL",
+    Params: {},
   },
   //#endregion
 };
